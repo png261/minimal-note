@@ -144,11 +144,13 @@ const app = {
         const id = note.getAttribute('note-id');
         _app.notes = _app.notes.filter(note => note.id != id);
         note.remove();
+        this.config();
     },
     reset: function () {
         _app.notes = [];
         content.innerHTML = '';
         localStorage.clear();
+        this.config();
     },
     handelEvent: function () {
         togglePalate.onclick = function () {
