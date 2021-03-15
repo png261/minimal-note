@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="assets/images/favicon.png" type="image/gif" sizes="16x16">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note | PNG</title>
+
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- STYLESHEET -->
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- APP -->
+    <div id="app">
+        <div id="sidebar">
+            <div class="add">
+                <div class="add__warper">
+                    <div class="add__toggle">
+                    </div>
+                    <div class="add__palette">
+                    </div>
+                </div>
+
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                    <defs>
+                      <filter id="goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                        <feBlend in="SourceGraphic" in2="goo" operator="atop"/>
+                      </filter>
+                    </defs>
+                </svg><!-- gooey filter -->
+            </div><!-- .addNote -->
+
+            <div class="settings">
+                <div class="settings__toggle">
+                    <img src="assets/images/settings-icon.svg" alt="">
+                </div>
+
+                <div class="settings__box">
+                    <div class="settings__import">
+                        <label for="import">Import notes</label>
+                        <input id="import" type="file"/>
+                    </div>
+                    <a id="export">Export note</a>
+                    <a id="reset">Delete All</a>
+                </div><!-- .settings__box -->
+                <div class="overlay"></div>
+            </div><!-- .settings -->
+        </div><!-- #sidebar -->
+
+        <main>
+            <h1 class="heading">Notes</h1>
+            <div id="content">
+            </div><!-- #content -->
+        </main>
+    </div>
+    <!-- END APP -->
+    
+    <!-- SCRIPT -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
