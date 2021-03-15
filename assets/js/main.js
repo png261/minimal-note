@@ -82,10 +82,13 @@ const app = {
     },
     render: function () {
         const notesHtml = _app.notes.map(note => _app.noteHTML(note)).join('');
-        const colorsHtml = _app.colorPalate.map(color => `<div class="color" color='${color}' style="background-color:${color}"></div>`).join('');
-
         content.innerHTML = notesHtml;
-        colorPalate.innerHTML = colorsHtml + colorPalate.innerHTML;
+
+        hasColorPalate = colorPalate.querySelector('.color');
+        if(!hasColorPalate){
+            const colorsHtml = _app.colorPalate.map(color => `<div class="color" color='${color}' style="background-color:${color}"></div>`).join('');
+            colorPalate.innerHTML = colorsHtml + colorPalate.innerHTML;
+        }
 
         _app.setUp();
     },
