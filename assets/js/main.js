@@ -90,17 +90,22 @@ const app = {
         _app.setUp();
     },
     export: function () {
-        const notesData = JSON.stringify(_app.notes.map(note => JSON.stringify(note)));
-        var a = document.createElement('a');
-        a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(notesData));
-        a.setAttribute('download', 'note-data.json');
+        const hasNote = _app.notes.length > 0;
+        if(hasNote){
+            const notesData = JSON.stringify(_app.notes.map(note => JSON.stringify(note)));
+            var a = document.createElement('a');
+            a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(notesData));
+            a.setAttribute('download', 'note-data.json');
 
-        a.style.display = 'none';
-        document.body.appendChild(a);
+            a.style.display = 'none';
+            document.body.appendChild(a);
 
-        a.click();
+            a.click();
 
-        a.body.removeChild(a);
+            a.body.removeChild(a);
+        }else{
+            alert('You have 0 note to export')
+        }
     },
     import: function (file) {
         const reader = new FileReader();
