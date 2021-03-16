@@ -13,35 +13,36 @@ const app = {
     isSaveData: true,
     colorPalate: ['#ffc971', '#ff9b73', '#b692fe', '#01d4ff', '#e4ee90'],
     notes: [],
-    noteConstructor: class {
+    Note: class {
         constructor({ id, color, content, date }) {
             this.id = id,
             this.color = color,
             this.content = content,
             this.date = date
         }
-    },
-    noteHTML: function ({ id, color, content, date }) {
-        const html = `
-            <div class="note" note-id='${id}' style="background-color:${color}">
-                <div class="note__content" contenteditable>
-                    ${content}
-                </div>
-                <div class="note__info">
-                    <span class="note__date">
-                        ${date}
-                    </span>
-                    <div class="note__delete">
-                        <img src="assets/images/delete-icon.svg">
+        getHTML(){
+            const html = `
+                <div class="note" note-id='${this.id}' style="background-color:${this.color}">
+                    <div class="note__content" contenteditable>
+                        ${this.content}
+                    </div>
+                    <div class="note__info">
+                        <span class="note__date">
+                            ${this.date}
+                        </span>
+                        <div class="note__delete">
+                            <img src="assets/images/delete-icon.svg">
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        return html;
+            `;
+            return html;
+        }
     },
     config: function () {
         window._app = this;
         window.notesEl = $$('#content .note');
+        window.notesContent = $$('#content .note .note__content');
         window.deleteBtn = $$('#content .note .note__delete');
         window.addBtn = $$('.add__palette .color');
     },
@@ -53,36 +54,20 @@ const app = {
         this.setUp();
 
         // load data
-        const notesData = JSON.parse(window.localStorage.getItem('notesData'));
+        const notesData = window.localStorage.getItem('notesData');
         if (notesData) {
-            _app.notes = notesData.map(data => JSON.parse(data))
+            _app.notes = JSON.parse(notesData).map(data => JSON.parse(data))
         }
 
         // save data
         window.addEventListener("beforeunload", function () {
-            _app.notes = [];
-
-            notesEl.forEach((note, index) => {
-                const color = note.style.backgroundColor
-                const content = note.querySelector('.note__content').innerText;
-                const date = note.querySelector('.note__date').innerText;
-
-                const noteData = {
-                    id: index,
-                    color: color,
-                    content: content,
-                    date: date
-                }
-                _app.notes[index] = new _app.noteConstructor(noteData);
-            })
-
-            const notesData = _app.notes.map(note => JSON.stringify(note));
-            window.localStorage.setItem('notesData', JSON.stringify(notesData));
+            const notesData = JSON.stringify( _app.notes.map(note => JSON.stringify(note)) );
+            window.localStorage.setItem('notesData', notesData);
         })
     },
     render: function () {
-        const notesHtml = _app.notes.map(note => _app.noteHTML(note)).join('');
-        content.innerHTML = notesHtml;
+        const notesHtml = _app.notes.map(note => new _app.Note(note).getHTML()).join('');
+        content.innerHTML = notesHtml;  
 
         hasColorPalate = colorPalate.querySelector('.color');
         if(!hasColorPalate){
@@ -90,11 +75,11 @@ const app = {
             colorPalate.innerHTML = colorsHtml + colorPalate.innerHTML;
         }
 
-        _app.setUp();
+        this.setUp();
     },
     export: function () {
-        const hasNote = _app.notes.length > 0;
-        if(hasNote){
+        const isHasNote = _app.notes.length > 0;
+        if(isHasNote){
             const notesData = JSON.stringify(_app.notes.map(note => JSON.stringify(note)));
             var a = document.createElement('a');
             a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(notesData));
@@ -140,13 +125,13 @@ const app = {
             content: '',
             date: noteDate
         }
-        const note = new _app.noteConstructor(noteData);
-        const html = _app.noteHTML(noteData);
+        const note = new _app.Note(noteData);
+        const html = note.getHTML();
 
         _app.notes.unshift(note);
         content.innerHTML = html + content.innerHTML;
 
-        _app.setUp();
+        this.setUp();
     },
     delete: function (note) {
         const id = note.getAttribute('note-id');
@@ -161,6 +146,16 @@ const app = {
         this.config();
     },
     handelEvent: function () {
+        notesContent.forEach((item) =>   {
+            item.addEventListener("input", function () { 
+                const id = item.closest('.note').getAttribute('note-id');
+                const content = item.innerText;
+                const index = _app.notes.findIndex(note => note.id == id);
+
+                _app.notes[index].content = content;
+            })
+        })
+
         togglePalate.onclick = function () {
             addBtn.forEach((btn, index) => {
                 setTimeout(function () {
