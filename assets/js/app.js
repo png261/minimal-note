@@ -22,9 +22,9 @@ const app = (function () {
     /** Note */
     class Note {
         constructor({ id, color, content, date }) {
-            this.id = id,
-            this.color = color,
-            this.content = content,
+            this.id = id;
+            this.color = color;
+            this.content = content;
             this.date = date
         }
         getHTML() {
